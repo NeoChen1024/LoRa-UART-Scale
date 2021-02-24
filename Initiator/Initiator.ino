@@ -8,7 +8,7 @@
 #define BAUD_RATE	9600
 
 // Use this if hardware serial present
-//#define XCVR	Serial1
+//#define XCVR	Serial2
 // Use this if no hardware serial is available
 SoftwareSerial XCVR(XCVR_RX, XCVR_TX);
 
@@ -18,7 +18,7 @@ uint8_t rx_packet[PACKET_SIZE];
 
 void setup(void)
 {
-	Serial.begin(BAUD_RATE);
+	Serial.begin(115200);
 	XCVR.begin(BAUD_RATE);
 	pinMode(LED_BUILTIN, OUTPUT);
 
@@ -30,6 +30,7 @@ void loop(void)
 	static int ctr = 0;
 	char buf[128];
 	int pktstate = PKT_NA;
+	float weight;
 
 	digitalWrite(LED_BUILTIN, HIGH);
 	construct_packet(tx_packet, PING, count++);
@@ -48,8 +49,10 @@ void loop(void)
 				case PKT_NA:	// Ignore it
 					break;
 				case PKT_OK:
-					sprintf(buf, ", op=%x seq=%lu received", get_op(rx_packet), get_serial(rx_packet));
+					sprintf(buf, ", received op=%x seq=%lu ", get_op(rx_packet), get_serial(rx_packet));
 					Serial.print(buf);
+					memcpy(&weight, rx_packet + 2, sizeof(float));
+					Serial.print(weight);
 					break;
 				case PKT_CORRUPT:
 					Serial.print(" -!");
