@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 
 #include "lib.h"
 
@@ -8,9 +8,9 @@
 #define BAUD_RATE	9600
 
 // Use this if hardware serial present
-//#define XCVR	Serial2
+#define XCVR	Serial2
 // Use this if no hardware serial is available
-SoftwareSerial XCVR(XCVR_RX, XCVR_TX);
+//SoftwareSerial XCVR(XCVR_RX, XCVR_TX);
 
 uint32_t count = 0; // frame count
 uint8_t tx_packet[PACKET_SIZE];
